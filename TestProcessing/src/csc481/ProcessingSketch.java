@@ -72,6 +72,8 @@ public class ProcessingSketch extends PApplet {
 			rectangles[i].move();
 			collision(player1, rectangles[i]);
 		}
+		prevXBounds[2] = ground.getxPos();
+		prevXBounds[3] = ground.getxPos() + ground.getWidth();
 		collision(player1, ground);
 
 		player1.display();
@@ -102,7 +104,7 @@ public class ProcessingSketch extends PApplet {
 			if ((rect1Right > rect2Left && rect1Right < rect2Right)
 					|| (rect1Left < rect2Right && rect1Left > rect2Left)) {
 				//if last turn rect1's x bounds were inside of rect2
-				if ((prevXBounds[1] > prevXBounds[2]) || (prevXBounds[0] < prevXBounds[3])) { //! DOES NOT CURRENTLY WORK (use XOR here?)
+				if ((prevXBounds[1] > prevXBounds[2]) && (prevXBounds[0] < prevXBounds[3])) { //! DOES NOT CURRENTLY WORK (use XOR here?)
 					//then we know rect1 is colliding with the top of rect2
 					rect1.setyPos(rect2Top - rect1.getHeight());
 					if (rect1 instanceof Player) {
@@ -133,7 +135,7 @@ public class ProcessingSketch extends PApplet {
 			if ((rect1Right > rect2Left && rect1Right < rect2Right)
 					|| (rect1Left < rect2Right && rect1Left > rect2Left)) {
 				//if last turn rect1's x bounds were inside of rect2
-				if ((prevXBounds[1] > prevXBounds[2]) || (prevXBounds[0] < prevXBounds[3])) { //! DOES NOT CURRENTLY WORK
+				if ((prevXBounds[1] > prevXBounds[2]) && (prevXBounds[0] < prevXBounds[3])) { //! DOES NOT CURRENTLY WORK
 					//then we know rect1 is colliding with the bottom of rect2
 					rect1.setyPos(rect2Bottom);
 					if (rect1 instanceof Player) {

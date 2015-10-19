@@ -9,9 +9,9 @@ public class Player extends Rectangle {
 	private static final float moveSpeed = (float) 2;
 	private boolean movingLeft;
 	private boolean movingRight;
-	private boolean jumping;
 	private boolean onGround;
 	private boolean secondJumpAvailable;
+	private boolean isJumping;
 	
 	public Player(PApplet p) {
 		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0);
@@ -24,6 +24,7 @@ public class Player extends Rectangle {
 		movingRight = false;
 		onGround = true;
 		secondJumpAvailable = false;
+		isJumping = false;
 	}
 	
 	public void move() {
@@ -39,10 +40,6 @@ public class Player extends Rectangle {
 		//set speed
 		if (movingLeft) xSpeed = -1 * moveSpeed;
 		if (movingRight) xSpeed = moveSpeed;
-		if (jumping) {
-			jumping = false;
-			ySpeed = jumpSpeed;		
-		}
 		
 		//move
 		xPos += xSpeed;
@@ -98,10 +95,11 @@ public class Player extends Rectangle {
 
 	public void jump() {
 		if (onGround) {
-			jumping = true;
+			ySpeed = jumpSpeed;
 			secondJumpAvailable = true;
-		} else if (secondJumpAvailable) {
-			jumping = true;
+			isJumping = true;
+		} else if (!isJumping && secondJumpAvailable) {
+			ySpeed = jumpSpeed;
 			secondJumpAvailable = false;
 		}
 	}
@@ -115,7 +113,7 @@ public class Player extends Rectangle {
 	}
 	
 	public void stopJump() {
-		jumping = false;
+		isJumping = false;
 	}
 
 	public boolean isOnGround() {
