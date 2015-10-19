@@ -99,9 +99,9 @@ public class Server {
 		ServerAccepter accepter = new ServerAccepter();
 		(new Thread(accepter)).start();
 		
-		//Random rand = new Random();
-		
+		//Random rand = new Random();		
 		int numClients = 3;//rand.nextInt(4) + 2;//2 to 6 clients //!
+		
 		//Initialize clients. Should be done on client side.
 		Client[] clients = new Client[numClients];
 		Thread[] threads = new Thread[numClients];
