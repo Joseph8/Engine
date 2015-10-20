@@ -1,6 +1,9 @@
 package csc481.objects;
 
-public abstract class Mover {
+import java.io.Serializable;
+
+public abstract class Mover implements Serializable{
+	private static final long serialVersionUID = 66484;
 	protected GameObject owner;
 	protected float xSpeed;
 	protected float ySpeed;

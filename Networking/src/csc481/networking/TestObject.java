@@ -2,7 +2,7 @@ package csc481.networking;
 
 import java.io.Serializable;
 
-public class TestObject implements Serializable{
+public class TestObject implements Serializable {
 
 	private static final long serialVersionUID = 156321565;
 	private String stringData;

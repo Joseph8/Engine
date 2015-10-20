@@ -14,6 +14,8 @@ public class Rectangle extends GameObject {
 		super.setAlpha(255);
 		this.color = color;
 		mover = new MoverNoGravity(xSpeed, ySpeed, this);
+		collider = null;
+		renderer = new RendererNormal((GameObject) this);
 	}
 
 }

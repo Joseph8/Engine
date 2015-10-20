@@ -1,7 +1,11 @@
 package csc481.objects;
+import java.io.Serializable;
+
 import processing.core.PApplet;
 
-public class GameObject {
+public class GameObject implements Serializable {
+
+	private static final long serialVersionUID = 12345;
 	protected float xPos;
 	protected float yPos;
 	protected int color;
@@ -13,7 +17,8 @@ public class GameObject {
 	
 	//components
 	protected Mover mover;
-	protected Collider collider;	
+	protected Collider collider;
+	protected Renderer renderer;
 	
 	public GameObject (PApplet p, float xPos, float yPos, float width, float height) {
 		parent = p;
@@ -90,9 +95,8 @@ public class GameObject {
 	public Collider getCollider() {
 		return collider;
 	}
-	
-	public void display() {
-		parent.fill(color);
-		parent.rect(xPos, yPos, width, height, corner_radius);
+
+	public Renderer getRenderer() {
+		return renderer;
 	}
 }

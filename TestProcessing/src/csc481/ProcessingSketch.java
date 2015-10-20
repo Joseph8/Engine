@@ -29,6 +29,8 @@ public class ProcessingSketch extends PApplet {
 		colors[5] = color(255, 215, 0);
 		size(800, 800);
 		background(100);
+		objects = new LinkedList<GameObject>();
+		
 		player1 = new Player(this, (float) width / 2, (float) height / 20,
 				(float) width / 30, (float) height / 30, 0);
 		objects.add(player1);
@@ -69,27 +71,51 @@ public class ProcessingSketch extends PApplet {
 		background(100);
 //		prevXBounds[0] = player1.getxPos();
 //		prevXBounds[1] = player1.getxPos() + player1.getWidth();
+		
+		//PRIORITY COLLLISION
+		/**
 		//collide lowest to highest priority
-		int curPri = 0; //start with lowest priority
+		boolean firstForPriority = true;
 		for (int curPri = 0; curPri < 3; curPri++) {
+			firstForPriority = true;
+			//process the current priority
 			for (GameObject object1 : objects) {
 				int priority = object1.getCollider().getPriority();
 				if (priority != curPri) continue;
 				
-				//equalCollide with same priority objects
-				for (GameObject object2 : objects) {
-					if (priority == object2.getCollider().getPriority()) {
-						
+				if (firstForPriority) {
+					//equalCollide with same priority objects
+					for (GameObject object2 : objects) {
+						if (priority == object2.getCollider().getPriority()) {
+							
+							
+						}
 					}
+					firstForPriority = false;
 				}
 				//wallCollide with higher priority objects
 				for (GameObject object2 : objects) { 
 					if (priority < object2.getCollider().getPriority()) {
-						
+						object1.getCollider().wallCollide(object2);
 					}
 				}
 			}
 		}
+		*/
+		player1.getCollider().setPrevOwnerXBounds();
+		player1.getMover().move();
+		player1.setOnGround(false);
+		int i = 0;
+		for (GameObject obj : objects) {
+			if (i == 0) {
+				i = 1;
+				continue;
+			}
+			player1.getCollider().setPrevObj2XBounds(obj);
+			obj.getMover().move();
+			player1.getCollider().collide(obj);
+		}
+		/**
 		player1.getMover().move();
 		player1.setOnGround(false);
 		for (int i = 0; i < rectangles.length; i++) {
@@ -103,12 +129,11 @@ public class ProcessingSketch extends PApplet {
 		//prevXBounds[3] = ground.getxPos() + ground.getWidth();
 		player1.getCollider().setPrevObj2XBounds(ground);
 		player1.getCollider().collide(ground);
+		*/
 
-		player1.display();
-		for (int i = 0; i < rectangles.length; i++) {
-			rectangles[i].display();
+		for (GameObject obj : objects) {
+			if (obj.getRenderer() != null) obj.getRenderer().render();
 		}
-		ground.display();
 	}
 
 	/**

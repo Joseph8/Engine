@@ -22,7 +22,8 @@ public class Player extends GameObject {
 		secondJumpAvailable = false;
 		isJumping = false;
 		mover = new MoverGravityJump((float) 3.5, (GameObject) this);
-		collider = new ColliderMedium();
+		collider = new ColliderNormal((GameObject) this);
+		renderer = new RendererNormal((GameObject) this);
 	}
 	
 	public void moveLeft() {

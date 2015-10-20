@@ -6,8 +6,12 @@ package csc481.objects;
  * @author Joseph Gregory
  *
  */
-public class ColliderMedium extends Collider{
+public class ColliderNormal extends Collider{
 
+	public ColliderNormal(GameObject obj) {
+		owner = obj;
+	}
+	
 	@Override
 	public void collide(GameObject obj2) {
 		float obj1Left = owner.xPos;

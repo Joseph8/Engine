@@ -1,9 +1,21 @@
 package csc481.objects;
 
-public abstract class Collider {
+import java.io.Serializable;
+
+public abstract class Collider implements Serializable {
+	private static final long serialVersionUID = 15654;
 	protected GameObject owner;
-	protected int priority;
+	//protected int priority;
 	protected float prevXBounds[] = new float[4];
+	
+	//PRIOITY COLLISION
+	/**
+	//collide where only this object changes velocity
+	public abstract void wallCollide(GameObject obj2);
+	
+	//collide where both objects hit and 
+	public abstract void equalCollide(GameObject obj2);
+	*/
 	
 	public abstract void collide(GameObject obj2);
 
@@ -22,8 +34,8 @@ public abstract class Collider {
 		
 	}
 	
-	public int getPriority() {
-		return priority;
-	}
+//	public int getPriority() {
+//		return priority;
+//	}
 
 }
