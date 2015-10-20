@@ -6,7 +6,7 @@ package csc481.objects;
  * @author Joseph Gregory
  *
  */
-public class ColliderNormal extends Collider{
+public class ColliderNormal extends Collider {
 
 	public ColliderNormal(GameObject obj) {
 		owner = obj;
@@ -14,6 +14,11 @@ public class ColliderNormal extends Collider{
 	
 	@Override
 	public void collide(GameObject obj2) {
+		if (obj2 instanceof SpawnPoint) return;
+		if (obj2 instanceof DeathZone) {
+			collideDeathZone(obj2);
+			return;
+		}
 		float obj1Left = owner.xPos;
 		float obj1Right = owner.xPos + owner.width;
 		float obj2Left = obj2.getxPos();
@@ -33,7 +38,9 @@ public class ColliderNormal extends Collider{
 					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) {
 						if (owner instanceof Player) ((Player)owner).setOnGround(true); //! CHANGE- caller shouldn't be a Player
 						//make the player move with obj2
-						((MoverGravityJump) owner.getMover()).addMovement(obj2.getMover().getXSpeed(), obj2.getMover().getYSpeed());
+						if (obj2.getMover() != null) {
+							((MoverGravityJump) owner.getMover()).addMovement(obj2.getMover().getXSpeed(), obj2.getMover().getYSpeed());
+						}
 					}
 					return;
 				} else {
@@ -46,7 +53,13 @@ public class ColliderNormal extends Collider{
 						//then we know obj1 is colliding with the right of obj2
 						owner.setxPos(obj2Right);						
 					}
-					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) ((MoverGravityJump)owner.getMover()).setXSpeed(obj2.getMover().getXSpeed());
+					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) {
+ 						if (obj2.getMover() == null) {
+ 							((MoverGravityJump)owner.getMover()).setXSpeed(0);
+ 						} else {
+ 							((MoverGravityJump)owner.getMover()).setXSpeed(obj2.getMover().getXSpeed());
+ 						}
+					}
 				}
 				if (owner instanceof Player) {
 					((Player)owner).setOnGround(true);
@@ -66,7 +79,13 @@ public class ColliderNormal extends Collider{
 						((Player)owner).setOnGround(true);
 						return;
 					}
-					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) ((MoverGravityJump)owner.getMover()).setYSpeed(obj2.getMover().getYSpeed());
+					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) {
+ 						if (obj2.getMover() == null) {
+ 							((MoverGravityJump)owner.getMover()).setYSpeed(0);
+ 						} else {
+ 							((MoverGravityJump)owner.getMover()).setYSpeed(obj2.getMover().getYSpeed());
+ 						}
+					}
 				} else {
 					//if last turn obj1's right is less than obj2's left
 					if (prevXBounds[1] <= prevXBounds[2]) {
@@ -77,7 +96,13 @@ public class ColliderNormal extends Collider{
 						//then we know obj1 is colliding with the right of obj2
 						owner.setxPos(obj2Right);						
 					}
-					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) ((MoverGravityJump)owner.getMover()).setXSpeed(obj2.getMover().getXSpeed());
+					if (owner.getMover() != null && owner.getMover() instanceof MoverGravityJump) {
+ 						if (obj2.getMover() == null) {
+ 							((MoverGravityJump)owner.getMover()).setXSpeed(0);
+ 						} else {
+ 							((MoverGravityJump)owner.getMover()).setXSpeed(obj2.getMover().getXSpeed());
+ 						}
+					}
 				}
 				if (owner instanceof Player) {
 					((Player)owner).setOnGround(true);
@@ -92,4 +117,22 @@ public class ColliderNormal extends Collider{
 		
 	}
 
+	private void collideDeathZone(GameObject obj2) {
+		float obj1Left = owner.xPos;
+		float obj1Right = owner.xPos + owner.width;
+		float obj2Left = obj2.getxPos();
+		float obj2Right = obj2.getxPos() + obj2.getWidth();
+		float obj1Top = owner.yPos;
+		float obj1Bottom = owner.yPos + owner.height;
+		float obj2Top = obj2.getyPos();
+		float obj2Bottom = obj2.getyPos() + obj2.getHeight();
+
+		if ((obj1Bottom > obj2Top && obj1Bottom < obj2Bottom) || 
+				(obj1Top < obj2Bottom && obj1Top > obj2Top)) {
+			if ((obj1Right > obj2Left && obj1Right < obj2Right)
+					|| (obj1Left < obj2Right && obj1Left > obj2Left)) {
+				((Player)owner).die();
+			}
+		}
+	}
 }

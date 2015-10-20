@@ -1,5 +1,7 @@
 package csc481.objects;
 
+import java.util.LinkedList;
+
 import csc481.ProcessingSketch;
 import processing.core.PApplet;
 
@@ -68,6 +70,16 @@ public class Player extends GameObject {
 			secondJumpAvailable = true;
 		}
 		this.onGround = onGround;
+	}
+	
+	public void die() {
+		LinkedList<GameObject> objects = ProcessingSketch.getObjects();
+		for (GameObject obj : objects) {
+			if (obj instanceof SpawnPoint) {
+				xPos = obj.getxPos();
+				yPos = obj.getyPos();
+			}
+		}
 	}
 	
 }

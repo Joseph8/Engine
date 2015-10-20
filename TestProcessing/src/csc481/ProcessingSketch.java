@@ -2,19 +2,22 @@ package csc481;
 
 import java.util.LinkedList;
 
+import csc481.objects.DeathZone;
 import csc481.objects.GameObject;
 import csc481.objects.MoverGravityJump;
 import csc481.objects.MoverNoGravity;
 import csc481.objects.Player;
-import csc481.objects.Rectangle;
+import csc481.objects.MovingPlatform;
+import csc481.objects.SpawnPoint;
+import csc481.objects.StaticPlatform;
 import processing.core.*;
 
 public class ProcessingSketch extends PApplet {
-	Rectangle[] rectangles = new Rectangle[12];
+	MovingPlatform[] rectangles = new MovingPlatform[12];
 	Player player1;
 	int colors[] = new int[6];
-	Rectangle ground;
-	LinkedList<GameObject> objects;
+	MovingPlatform ground;
+	private static LinkedList<GameObject> objects;
 	/**Params to use in collision() that give top/bottom bounds
 	of rect positions before move().
 	{obj1Left, obj1Right, obj2Left, obj2Right}*/
@@ -39,13 +42,22 @@ public class ProcessingSketch extends PApplet {
 			float ySpeed = sqrt(1 - xSpeed * xSpeed);
 			if (random(0, 2) < 1)
 				ySpeed *= -1;
-			objects.add( new Rectangle(this, random(1, width), random(1,
+			objects.add( new MovingPlatform(this, random(1, width), random(1,
 					height), random(width / 30, width / 10), random(
-					height / 30, height / 10), 0, xSpeed, ySpeed, colors[i % colors.length]));
+					height / 30, height / 10), 0, colors[i % colors.length], xSpeed, ySpeed));
 			
 		}
-		objects.add( new Rectangle(this, 0, 19 * (height / 20), width,
-				(height / 20), 0, 0, 0, color(85, 107, 47)));
+		//objects.add( new StaticPlatform(this, 0, 19 * (height / 20), width, (height / 20), 0, color(85, 107, 47))); // ground
+		objects.add( new StaticPlatform(this, 0, 19 * (height / 20), width/10,
+				(height / 20), 0, color(85, 107, 47)));
+		objects.add( new StaticPlatform(this, width/2, 15 * (height / 20), width/10,
+				(height / 20), 0, color(85, 107, 47)));
+		objects.add( new StaticPlatform(this, width/3, 8 * (height / 20), width/10,
+				(height / 20), 0, color(85, 107, 47)));
+		objects.add( new DeathZone(this, 0, 24 * (height / 25), width, (height / 25), 0));
+		objects.add( new SpawnPoint(this, 5, 17 * (height / 20)));
+		objects.add( new SpawnPoint(this, width/2 + 5, 13 * (height / 20)));
+		objects.add( new SpawnPoint(this, width/3 + 5, 6 * (height / 20)));
 		
 	}
 
@@ -102,6 +114,8 @@ public class ProcessingSketch extends PApplet {
 			}
 		}
 		*/
+		
+		//move and collide
 		player1.getCollider().setPrevOwnerXBounds();
 		player1.getMover().move();
 		player1.setOnGround(false);
@@ -112,7 +126,7 @@ public class ProcessingSketch extends PApplet {
 				continue;
 			}
 			player1.getCollider().setPrevObj2XBounds(obj);
-			obj.getMover().move();
+			if (obj.getMover() != null) obj.getMover().move();
 			player1.getCollider().collide(obj);
 		}
 		/**
@@ -130,7 +144,8 @@ public class ProcessingSketch extends PApplet {
 		player1.getCollider().setPrevObj2XBounds(ground);
 		player1.getCollider().collide(ground);
 		*/
-
+		
+		//render
 		for (GameObject obj : objects) {
 			if (obj.getRenderer() != null) obj.getRenderer().render();
 		}
@@ -252,5 +267,9 @@ public class ProcessingSketch extends PApplet {
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "ProcessingSketch" });
+	}
+	
+	public static LinkedList<GameObject> getObjects() {
+		return objects;
 	}
 }
