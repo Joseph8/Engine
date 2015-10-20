@@ -3,113 +3,55 @@ package csc481.objects;
 import csc481.ProcessingSketch;
 import processing.core.PApplet;
 
-public class Player extends Rectangle {
-	private static final float maxFallingSpeed = (float) 3.5;
+public class Player extends GameObject {
 	private static final float jumpSpeed = (float) -3.5;
-	private static final float moveSpeed = (float) 2;
-	private boolean movingLeft;
-	private boolean movingRight;
+	private static final float maxMoveSpeed = (float) 4;
 	private boolean onGround;
 	private boolean secondJumpAvailable;
 	private boolean isJumping;
+
 	
 	public Player(PApplet p) {
 		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0);
 	}
 	
 	public Player(PApplet p, float xPos, float yPos, float width, float height, float corner_radius) {
-		super(p, xPos, yPos, width, height, corner_radius);
-		setXSpeed((float) 1.5);
-		movingLeft = false;
-		movingRight = false;
+		super(p, xPos, yPos, width, height);
+		//setXSpeed((float) 1.5);
 		onGround = true;
 		secondJumpAvailable = false;
 		isJumping = false;
-	}
-	
-	public void move() {
-//		if (movedLeft) {
-//			movedLeft = false;
-//			xPos -= xSpeed;
-//		}
-//		if (movedRight) {
-//			movedRight = false;
-//			xPos += xSpeed;
-//		}
-		
-		//set speed
-		if (movingLeft) xSpeed = -1 * moveSpeed;
-		if (movingRight) xSpeed = moveSpeed;
-		
-		//move
-		xPos += xSpeed;
-		yPos += ySpeed;
-		
-		//y acceleration
-		if (ySpeed < maxFallingSpeed) {
-			ySpeed += .1;
-			if (ySpeed > maxFallingSpeed) {
-				ySpeed = maxFallingSpeed;
-			}
-		}
-		//x acceleration
-		if (xSpeed > 0) {
-			xSpeed -= .1;
-			if (xSpeed < 0) {
-				xSpeed = 0;
-			}
-		} else if (xSpeed < 0) {
-			xSpeed += .1;
-			if (xSpeed > 0) {
-				xSpeed = 0;
-			}
-		}
-		
-		//move to opposite boundary
-		if (xPos > parent.width) {
-			xPos = 0;
-		} else if (xPos < 0) {
-			xPos = parent.width;
-		}
-		if (yPos > parent.height) {
-			yPos = 0;
-		} else if (yPos < 0) {
-			yPos = parent.height;
-		}
-	}
-	
-	public void addMovement(float xSpeed2, float ySpeed2) {
-		xPos += xSpeed2;
-		if (yPos + ySpeed2 > maxFallingSpeed) {
-			yPos += ySpeed2;
-		}
+		mover = new MoverGravityJump((float) 3.5, (GameObject) this);
+		collider = new ColliderMedium();
 	}
 	
 	public void moveLeft() {
-		movingLeft = true;
+		((MoverGravityJump)mover).targetXSpeed = -1 * maxMoveSpeed;
+		((MoverGravityJump)mover).movingLeft = true;
 	}
 	
 	public void moveRight() {
-		movingRight = true;
+		((MoverGravityJump)mover).targetXSpeed = maxMoveSpeed;
+		((MoverGravityJump)mover).movingRight = true;
 	}
 
 	public void jump() {
 		if (onGround) {
-			ySpeed = jumpSpeed;
+			((MoverGravityJump)mover).ySpeed = jumpSpeed;
 			secondJumpAvailable = true;
 			isJumping = true;
 		} else if (!isJumping && secondJumpAvailable) {
-			ySpeed = jumpSpeed;
+			((MoverGravityJump)mover).ySpeed = jumpSpeed;
 			secondJumpAvailable = false;
 		}
 	}
 
 	public void stopMoveLeft() {
-		movingLeft = false;
+		((MoverGravityJump)mover).movingLeft = false;
 	}
 	
 	public void stopMoveRight() {
-		movingRight = false;
+		((MoverGravityJump)mover).movingRight = false;
 	}
 	
 	public void stopJump() {

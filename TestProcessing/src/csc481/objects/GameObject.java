@@ -1,21 +1,26 @@
 package csc481.objects;
 import processing.core.PApplet;
 
-public class Object {
+public class GameObject {
 	protected float xPos;
 	protected float yPos;
-	protected float xSpeed;
-	protected float ySpeed;
 	protected int color;
 	protected int alpha;     //opacity
+	protected float width;
+	protected float height;
+	protected float corner_radius;
 	protected PApplet parent;
 	
-	public Object (PApplet p) {
+	//components
+	protected Mover mover;
+	protected Collider collider;	
+	
+	public GameObject (PApplet p, float xPos, float yPos, float width, float height) {
 		parent = p;
-		xPos = 0;
-		yPos = 0;
-		xSpeed = 0;
-		ySpeed = 0;
+		this.xPos = xPos;
+		this.yPos = yPos;
+		this.width = width;
+		this.height = height;
 		color = 0;
 		alpha = 0;
 	}
@@ -30,7 +35,22 @@ public class Object {
 //		xPos += speed;
 //		//if (x > parent.width +20) x = -20;
 //	}
+	public float getWidth() {
+		return width;
+	}
 
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+	
 	public float getxPos() {
 		return xPos;
 	}
@@ -47,22 +67,6 @@ public class Object {
 		this.yPos = yPos;
 	}
 
-	public float getXSpeed() {
-		return xSpeed;
-	}
-
-	public void setXSpeed(float speed) {
-		this.xSpeed = speed;
-	}
-	
-	public float getYSpeed() {
-		return ySpeed;
-	}
-
-	public void setYSpeed(float speed) {
-		this.ySpeed = speed;
-	}
-
 	public int getColor() {
 		return color;
 	}
@@ -77,5 +81,18 @@ public class Object {
 
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
+	}
+
+	public Mover getMover() {
+		return mover;
+	}
+	
+	public Collider getCollider() {
+		return collider;
+	}
+	
+	public void display() {
+		parent.fill(color);
+		parent.rect(xPos, yPos, width, height, corner_radius);
 	}
 }
