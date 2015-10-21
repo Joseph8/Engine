@@ -2,6 +2,7 @@ package csc481;
 
 import java.util.LinkedList;
 
+import csc481.networking.Client;
 import csc481.objects.DeathZone;
 import csc481.objects.GameObject;
 import csc481.objects.MoverGravityJump;
@@ -22,6 +23,8 @@ public class ProcessingSketch extends PApplet {
 	of rect positions before move().
 	{obj1Left, obj1Right, obj2Left, obj2Right}*/
 	float prevXBounds[] = new float[4];
+	private Client client;
+	private static int playerIdx;
 
 	public void setup() {
 		colors[0] = color(238, 233, 233);
@@ -32,33 +35,38 @@ public class ProcessingSketch extends PApplet {
 		colors[5] = color(255, 215, 0);
 		size(800, 800);
 		background(100);
-		objects = new LinkedList<GameObject>();
+//		
+//		player1 = new Player(this, (float) width / 2, (float) height / 20,
+//				(float) width / 30, (float) height / 30, 0);
+//		objects.add(player1);
+//		for (int i = 0; i < rectangles.length; i++) {
+//			float xSpeed = random(-1, 1);
+//			float ySpeed = sqrt(1 - xSpeed * xSpeed);
+//			if (random(0, 2) < 1)
+//				ySpeed *= -1;
+//			objects.add( new MovingPlatform(this, random(1, width), random(1,
+//					height), random(width / 30, width / 10), random(
+//					height / 30, height / 10), 0, colors[i % colors.length], xSpeed, ySpeed));
+//			
+//		}
+//		//objects.add( new StaticPlatform(this, 0, 19 * (height / 20), width, (height / 20), 0, color(85, 107, 47))); // ground
+//		objects.add( new StaticPlatform(this, 0, 19 * (height / 20), width/10,
+//				(height / 20), 0, color(85, 107, 47)));
+//		objects.add( new StaticPlatform(this, width/2, 15 * (height / 20), width/10,
+//				(height / 20), 0, color(85, 107, 47)));
+//		objects.add( new StaticPlatform(this, width/3, 8 * (height / 20), width/10,
+//				(height / 20), 0, color(85, 107, 47)));
+//		objects.add( new DeathZone(this, 0, 24 * (height / 25), width, (height / 25), 0));
+//		objects.add( new SpawnPoint(this, 5, 17 * (height / 20)));
+//		objects.add( new SpawnPoint(this, width/2 + 5, 13 * (height / 20)));
+//		objects.add( new SpawnPoint(this, width/3 + 5, 6 * (height / 20)));
 		
+		client = new Client();
+		objects = client.init();
+		playerIdx = objects.size();
 		player1 = new Player(this, (float) width / 2, (float) height / 20,
-				(float) width / 30, (float) height / 30, 0);
+				(float) width / 30, (float) height / 30, 0, playerIdx);
 		objects.add(player1);
-		for (int i = 0; i < rectangles.length; i++) {
-			float xSpeed = random(-1, 1);
-			float ySpeed = sqrt(1 - xSpeed * xSpeed);
-			if (random(0, 2) < 1)
-				ySpeed *= -1;
-			objects.add( new MovingPlatform(this, random(1, width), random(1,
-					height), random(width / 30, width / 10), random(
-					height / 30, height / 10), 0, colors[i % colors.length], xSpeed, ySpeed));
-			
-		}
-		//objects.add( new StaticPlatform(this, 0, 19 * (height / 20), width, (height / 20), 0, color(85, 107, 47))); // ground
-		objects.add( new StaticPlatform(this, 0, 19 * (height / 20), width/10,
-				(height / 20), 0, color(85, 107, 47)));
-		objects.add( new StaticPlatform(this, width/2, 15 * (height / 20), width/10,
-				(height / 20), 0, color(85, 107, 47)));
-		objects.add( new StaticPlatform(this, width/3, 8 * (height / 20), width/10,
-				(height / 20), 0, color(85, 107, 47)));
-		objects.add( new DeathZone(this, 0, 24 * (height / 25), width, (height / 25), 0));
-		objects.add( new SpawnPoint(this, 5, 17 * (height / 20)));
-		objects.add( new SpawnPoint(this, width/2 + 5, 13 * (height / 20)));
-		objects.add( new SpawnPoint(this, width/3 + 5, 6 * (height / 20)));
-		
 	}
 
 	public void draw() {
@@ -114,7 +122,8 @@ public class ProcessingSketch extends PApplet {
 			}
 		}
 		*/
-		
+		objects = client.update(player1);
+
 		//move and collide
 		player1.getCollider().setPrevOwnerXBounds();
 		player1.getMover().move();
@@ -158,7 +167,7 @@ public class ProcessingSketch extends PApplet {
 	 * @param obj1nplayer rectangle
 	 * @param obj2 other rectangle
 	 */
-	private void collision(GameObject obj1, GameObject obj2) {
+	/**private void collision(GameObject obj1, GameObject obj2) {
 		float obj1Left = obj1.getxPos();
 		float obj1Right = obj1.getxPos() + obj1.getWidth();
 		float obj2Left = obj2.getxPos();
@@ -236,6 +245,7 @@ public class ProcessingSketch extends PApplet {
 		//obj1.setColor(color(0, 0, 0));
 
 	}
+	*/
 
 	public void keyPressed() {
 		switch (key) {

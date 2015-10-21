@@ -158,6 +158,7 @@ public class ProcessingSketch extends PApplet {
 	 * @param obj1nplayer rectangle
 	 * @param obj2 other rectangle
 	 */
+	/**
 	private void collision(GameObject obj1, GameObject obj2) {
 		float obj1Left = obj1.getxPos();
 		float obj1Right = obj1.getxPos() + obj1.getWidth();
@@ -236,6 +237,7 @@ public class ProcessingSketch extends PApplet {
 		//obj1.setColor(color(0, 0, 0));
 
 	}
+	*/
 
 	public void keyPressed() {
 		switch (key) {

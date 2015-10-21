@@ -11,13 +11,14 @@ public class Player extends GameObject {
 	private boolean onGround;
 	private boolean secondJumpAvailable;
 	private boolean isJumping;
+	private int index;
 
 	
 	public Player(PApplet p) {
-		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0);
+		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0);
 	}
 	
-	public Player(PApplet p, float xPos, float yPos, float width, float height, float corner_radius) {
+	public Player(PApplet p, float xPos, float yPos, float width, float height, float corner_radius, int index) {
 		super(p, xPos, yPos, width, height);
 		//setXSpeed((float) 1.5);
 		onGround = true;
@@ -80,6 +81,10 @@ public class Player extends GameObject {
 				yPos = obj.getyPos();
 			}
 		}
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 }
