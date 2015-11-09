@@ -1,4 +1,4 @@
-package csc481.networking;
+/**package csc481.networking;
 
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
  * Receives objects from the clients and updates them in the server.
  * @author Joseph Gregory
  *
- */
+ *
 public class ServerReceiver implements Runnable{
 
 	public static final int PORT_NUMBER = 26036;
@@ -48,11 +48,11 @@ public class ServerReceiver implements Runnable{
 				    	  
 					      
 				    	  //For future assignments
-				    	  /*int guid = (GameObject)obj.getGUID();
-					      synchronize(Server.GameObjects[guid]) {
-					   			Server.updateObject(guid, (GameObject)obj);
-					      }
-					      */
+//				    	  int guid = (GameObject)obj.getGUID();
+//					      synchronize(Server.GameObjects[guid]) {
+//					   			Server.updateObject(guid, (GameObject)obj);
+//					      }
+					      
 		    		  //}
 		    	  }
 	    	  }
@@ -67,4 +67,4 @@ public class ServerReceiver implements Runnable{
 		isRunning = false;
 	}
 
-}
+}*/

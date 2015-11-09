@@ -1,4 +1,4 @@
-package csc481.networking;
+/**package csc481.networking;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -53,3 +53,4 @@ public class ServerAccepter implements Runnable{
 	}
 
 }
+*/

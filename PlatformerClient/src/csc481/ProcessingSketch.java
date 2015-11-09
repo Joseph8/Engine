@@ -1,7 +1,9 @@
 package csc481;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
+import csc481.events.Event;
 import csc481.networking.Client;
 import csc481.objects.DeathZone;
 import csc481.objects.GameObject;
@@ -25,6 +27,8 @@ public class ProcessingSketch extends PApplet {
 	float prevXBounds[] = new float[4];
 	private Client client;
 	private static int playerIdx;
+	
+	private ArrayList<Event> eventBuffer;
 
 	public void setup() {
 		colors[0] = color(238, 233, 233);
@@ -62,35 +66,23 @@ public class ProcessingSketch extends PApplet {
 //		objects.add( new SpawnPoint(this, width/3 + 5, 6 * (height / 20)));
 		
 		client = new Client();
-		objects = client.init();
-		playerIdx = objects.size();
 		player1 = new Player(this, (float) width / 2, (float) height / 20,
 				(float) width / 30, (float) height / 30, 0, playerIdx);
+		objects = new LinkedList<GameObject>();
 		objects.add(player1);
+		objects.addAll(client.init());
+		
+		//playerIdx = objects.size();
 	}
 
 	public void draw() {
-		// stroke(255);
-		// if (mousePressed) {
-		// line(mouseX, mouseY, pmouseX, pmouseY);
-		// }
-		// System.out.println("HERE 1");
-		// if (keyPressed) {
-		// switch(key) {
-		// case 'a':
-		// player1.moveLeft();
-		// break;
-		// case 'd':
-		// player1.moveRight();
-		// break;
-		// case ' ':
-		// player1.jump();
-		// break;
-		// }
-		// }
+		objects = client.update(eventBuffer);
+
+		//render
 		background(100);
-//		prevXBounds[0] = player1.getxPos();
-//		prevXBounds[1] = player1.getxPos() + player1.getWidth();
+		for (GameObject obj : objects) {
+			if (obj.getRenderer() != null) obj.getRenderer().render();
+		}
 		
 		//PRIORITY COLLLISION
 		/**
@@ -122,8 +114,8 @@ public class ProcessingSketch extends PApplet {
 			}
 		}
 		*/
-		objects = client.update(player1);
 
+		/**
 		//move and collide
 		player1.getCollider().setPrevOwnerXBounds();
 		player1.getMover().move();
@@ -138,6 +130,8 @@ public class ProcessingSketch extends PApplet {
 			if (obj.getMover() != null) obj.getMover().move();
 			player1.getCollider().collide(obj);
 		}
+		*/
+		
 		/**
 		player1.getMover().move();
 		player1.setOnGround(false);
@@ -153,11 +147,6 @@ public class ProcessingSketch extends PApplet {
 		player1.getCollider().setPrevObj2XBounds(ground);
 		player1.getCollider().collide(ground);
 		*/
-		
-		//render
-		for (GameObject obj : objects) {
-			if (obj.getRenderer() != null) obj.getRenderer().render();
-		}
 	}
 
 	/**
@@ -251,6 +240,7 @@ public class ProcessingSketch extends PApplet {
 		switch (key) {
 		case 'a':
 			player1.moveLeft();
+			//eventBuffer.add();
 			break;
 		case 'd':
 			player1.moveRight();

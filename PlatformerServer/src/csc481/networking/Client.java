@@ -1,5 +1,6 @@
 package csc481.networking;
 
+import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -60,21 +61,25 @@ public class Client implements Runnable {
     			//update this client with new information from the server
     			//(probably want to make this a new thread in the future)
     			TestObject inObj;
-    			try {
-        			//System.out.println("created input stream");//!
-    				int i = 0;
-        			do {
-        				i++;
-        				inObj = (TestObject) input.readObject();
-        				//System.out.println("read object");//!
-        				//need to somehow put this in a loop so it keeps reading object until
-        				//the server no longer needs to send any more objects
-        				objects.set( inObj.getIndex(), inObj);
-        				System.out.println(">>>>A client RECEIVED a TestObject with a stringData to " + inObj.getStringData());//!
-        				if (i > 1) System.out.println("a client read multiple objects------------------------------" + i);
-        			} while (input.available() != 0);
-        		} catch (SocketTimeoutException e) {
-    				continue;
+    			while (true) {
+	    			try {
+	        			//System.out.println("created input stream");//!
+	    				int i = 0;
+	        			do {
+	        				i++;
+	        				inObj = (TestObject) input.readObject();
+	        				//System.out.println("read object");//!
+	        				//need to somehow put this in a loop so it keeps reading object until
+	        				//the server no longer needs to send any more objects
+	        				objects.set( inObj.getIndex(), inObj);
+	        				System.out.println(">>>>A client RECEIVED a TestObject with a stringData to " + inObj.getStringData());//!
+	        				if (i > 1) System.out.println("a client read multiple objects------------------------------" + i);
+	        			} while (input.available() != 0);
+	        		} catch (SocketTimeoutException e) {
+	    				break;
+	    			} catch (EOFException e) {
+	    				break;
+	    			}
     			}
     		}
     		

@@ -39,8 +39,9 @@ public class ServerReceiver implements Runnable{
 		    		  	  }
 		    		  	  
 				    	  //System.out.println("111111111111111111111111111111" + p);//!
-				    	  System.out.println(">:??>>> Passed in obj value: " + object.getStringData() + ", New obj value: " + Server.objects.get(object.getIndex()).getStringData());
 				    	  Server.updateObject(object);
+				    	  System.out.println(">:??>>> Passed in obj value: " + object.getStringData() + ", New obj value: " + Server.objects.get(object.getIndex()).getStringData());
+
 				    	  System.out.println("222222222222222222222222222222");//!
 				  		  //must tell all clients that this object has been updated
 				    	  Server.sendObjectToClients(object, object.getIndex());

@@ -1,14 +1,17 @@
 package csc481.networking;
 
+import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
 import csc481.ProcessingSketch;
+import csc481.events.Event;
 import csc481.objects.GameObject;
 import csc481.objects.Player;
 
@@ -21,23 +24,23 @@ public class Client {
 	private Socket sock;
 	private ObjectInputStream input;
 
-	public LinkedList<GameObject> update(Player player) {
+	public LinkedList<GameObject> update(ArrayList<Event> eventBuffer) {
 		try {
 
 			ObjectOutputStream output = new ObjectOutputStream( sock.getOutputStream() );
 			
 			output.reset();
-			output.writeObject(player);
+			output.writeObject(eventBuffer);
 			output.flush();
 			System.out.println("client written to server");//!
 			//update this client with new information from the server
 			//(probably want to make this a new thread in the future)
 			Player inObj;
-			try {
-    			//System.out.println("created input stream");//!
-				int i = 0;
-    			do {
-    				return (LinkedList<GameObject>) input.readObject();
+			LinkedList<GameObject> newObjects = null;
+			while (true) {
+				try {
+					int i = 0;
+    				newObjects = (LinkedList<GameObject>) input.readObject();
     				
 //    				i++;
 //    				inObj = (Player) input.readObject();
@@ -46,10 +49,12 @@ public class Client {
 //    				//the server no longer needs to send any more objects
 //    				ProcessingSketch.getObjects().set( inObj.getIndex(), inObj);
 //    				System.out.println(">>>>A client RECEIVED a player with inded " + inObj.getIndex());//!
-//    				if (i > 1) System.out.println("a client read multiple objects------------------------------" + i);
-    			} while (input.available() != 0);
-    		} catch (SocketTimeoutException e) {
-				return null;
+    				if (i > 1) System.out.println("a client read multiple objects------------------------------" + i);
+	    		} catch (SocketTimeoutException e) {
+					return null;
+				} catch (EOFException e) {
+					return newObjects;
+				}
 			}
 		
 		} catch (Exception e) {
@@ -69,7 +74,7 @@ public class Client {
 			ObjectInputStream input = new ObjectInputStream( sock.getInputStream() );
 	
 			//populate the objects list with objects from the server until the server sends a null object
-			LinkedList<GameObject> objects = (LinkedList<GameObject>)input.readObject();	
+			LinkedList<GameObject> objects = (LinkedList<GameObject>) input.readObject();	
 	
 			
 	//		System.out.println("IN THE CLIENT :");//!

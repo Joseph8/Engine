@@ -1,4 +1,5 @@
-package csc481.networking;
+
+/**package csc481.networking;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,7 +12,6 @@ import java.util.Random;
 import csc481.ProcessingSketch;
 import csc481.objects.GameObject;
 import csc481.objects.Player;
-
 public class Server {
 	private static final int NUM_OBJECTS = 12;
 	public static final int PORT_NUMBER = 26036;
@@ -92,4 +92,4 @@ public class Server {
 		outputStreams = new LinkedList<ObjectOutputStream>();
 		inputStreams = new LinkedList<ObjectInputStream>();
 	}
-}
+}*/
