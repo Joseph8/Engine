@@ -272,4 +272,9 @@ public class ProcessingSketch extends PApplet {
 	public static LinkedList<GameObject> getObjects() {
 		return objects;
 	}
+
+	public static void getHandler() {
+		// TODO Auto-generated method stub
+		
+	}
 }

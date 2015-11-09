@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import csc481.events.Event;
+import csc481.events.InputEvent;
+import csc481.events.InputType;
 import csc481.networking.Client;
 import csc481.objects.DeathZone;
 import csc481.objects.GameObject;
@@ -70,7 +72,7 @@ public class ProcessingSketch extends PApplet {
 				(float) width / 30, (float) height / 30, 0, playerIdx);
 		objects = new LinkedList<GameObject>();
 		objects.add(player1);
-		objects.addAll(client.init());
+		objects.addAll(client.init(player1));
 		
 		//playerIdx = objects.size();
 	}
@@ -239,13 +241,15 @@ public class ProcessingSketch extends PApplet {
 	public void keyPressed() {
 		switch (key) {
 		case 'a':
-			player1.moveLeft();
-			//eventBuffer.add();
+			//player1.moveLeft();
+			eventBuffer.add(new InputEvent(InputType.MOVE_LEFT));
 			break;
 		case 'd':
-			player1.moveRight();
+			//player1.moveRight();
+			eventBuffer.add(new InputEvent(InputType.MOVE_RIGHT));
 			break;
 		case ' ':
+			//eventBuffer.add(new InputEvent(InputType.JUMP));
 			player1.jump();
 			break;
 		}
@@ -254,13 +258,16 @@ public class ProcessingSketch extends PApplet {
 	public void keyReleased() {
 		switch (key) {
 		case 'a':
-			player1.stopMoveLeft();
+			//player1.stopMoveLeft();
+			eventBuffer.add(new InputEvent(InputType.STOP_MOVE_LEFT));
 			break;
 		case 'd':
-			player1.stopMoveRight();
+			//player1.stopMoveRight();
+			eventBuffer.add(new InputEvent(InputType.STOP_MOVE_LEFT));
 			break;
 		case ' ':
-			player1.stopJump();
+			//player1.stopJump();
+			eventBuffer.add(new InputEvent(InputType.STOP_MOVE_LEFT));
 			break;
 		}
 	}

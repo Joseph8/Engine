@@ -44,7 +44,7 @@ public class ServerReceiver implements Runnable{
 
 				    	  System.out.println("222222222222222222222222222222");//!
 				  		  //must tell all clients that this object has been updated
-				    	  Server.sendObjectToClients(object, object.getIndex());
+				    	  //Server.sendObjectToClients(object, object.getIndex());
 				    	  System.out.println("333333333333333333333333333333");//!
 				    	  
 					      

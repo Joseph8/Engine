@@ -23,11 +23,15 @@ public class Client {
 	private boolean isRunning;
 	private Socket sock;
 	private ObjectInputStream input;
+	private ObjectOutputStream output;
 
+	/**
+	 * Send input events to the server and receive the updated GameObjects from the server.
+	 * @param eventBuffer events to send
+	 * @return the updated GameObjects
+	 */
 	public LinkedList<GameObject> update(ArrayList<Event> eventBuffer) {
 		try {
-
-			ObjectOutputStream output = new ObjectOutputStream( sock.getOutputStream() );
 			
 			output.reset();
 			output.writeObject(eventBuffer);
@@ -65,14 +69,18 @@ public class Client {
 		return null;
 	}
 	
-	public LinkedList<GameObject> init() {
+	public LinkedList<GameObject> init(Player player) {
 		try {
 			host  = InetAddress.getByName("127.0.0.1");
 			sock = new Socket(host, PORT_NUMBER);
 			sock.setSoTimeout(timeout);
 			
-			ObjectInputStream input = new ObjectInputStream( sock.getInputStream() );
-	
+			ObjectOutputStream output = new ObjectOutputStream( sock.getOutputStream() );
+			output.reset();
+			output.writeObject(player);
+			output.flush();
+			
+			ObjectInputStream input = new ObjectInputStream( sock.getInputStream() );	
 			//populate the objects list with objects from the server until the server sends a null object
 			LinkedList<GameObject> objects = (LinkedList<GameObject>) input.readObject();	
 	

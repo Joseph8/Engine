@@ -6,6 +6,10 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Random;
 
+import csc481.ProcessingSketch;
+import csc481.objects.GameObject;
+import csc481.objects.Player;
+
 public class Server {
 	private static final int NUM_OBJECTS = 12;
 	/**The sockets representing client connections. */
@@ -30,20 +34,13 @@ public class Server {
 		//will this synchronize on the correct object? (since add() probably copies sock)
 		//synchronized (sock) {
 			try {
-				ObjectOutputStream output = new ObjectOutputStream( sock.getOutputStream());
-				for (int i = 0;  i < objects.size(); i++) {
-					synchronized (objects.get(i)) {
-						output.reset();
-						output.writeObject(objects.get(i));
-					}
-					output.reset();
-					output.flush();	
-				}
+				ObjectInputStream input = new ObjectInputStream(sock.getInputStream());
+				Player newPlayer = (Player) input.readObject();
+				
 				//send terminating TestObject to tell the client that the server is done sending objects
-				output.writeObject(new TestObject("init", -1));
-				output.flush();
-				outputStreams.add(output);
-				inputStreams.add(new ObjectInputStream(sock.getInputStream()));
+				ProcessingSketch.getHandler().raise(new NewObjectEvent(newPlayer));
+				outputStreams.add(new ObjectOutputStream(sock.getOutputStream()));
+				inputStreams.add(input);
 				sockets.add(sock);
 				
 			} catch (Exception e) {
@@ -60,10 +57,9 @@ public class Server {
 	 * @param skipIdx skip sending object info to this object at this index in objects
 	 *  (if this object sent the update object in the first place).
 	 */
-	public static void sendObjectToClients(Object object, int skipIdx) {
+	public static void sendObjectToClients(LinkedList<GameObject> objects) {
 	      try {
 		    for (int i = 0;  i < sockets.size(); i++) {
-		    	if (i == skipIdx) continue;
 		    	//Only need to synchronize here if the server could call this method
 		    	//(since it could be called also from a client)
 		    	synchronized (sockets.get(i)) {
@@ -71,7 +67,7 @@ public class Server {
 		    		ObjectOutputStream output = outputStreams.get(i);
 		    		//don't need to synchronize object since its a copy of the actual object (Java is pass by value)
 		    		output.reset();
-		    		output.writeObject(object);
+		    		output.writeObject(objects);
 				    output.flush();
 				    
 		    	}

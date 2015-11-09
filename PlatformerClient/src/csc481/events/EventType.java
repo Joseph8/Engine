@@ -4,5 +4,6 @@ public enum EventType {
 	INPUT,
 	COLLISION,
 	DEATH,
-	SPAWN
+	SPAWN,
+	NEW_OBJECT
 }
