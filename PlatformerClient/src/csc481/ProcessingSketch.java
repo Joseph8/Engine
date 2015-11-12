@@ -18,6 +18,7 @@ import csc481.objects.StaticPlatform;
 import processing.core.*;
 
 public class ProcessingSketch extends PApplet {
+	private static final long serialVersionUID = -2852108565417806285L;
 	MovingPlatform[] rectangles = new MovingPlatform[12];
 	Player player1;
 	int colors[] = new int[6];
@@ -69,17 +70,21 @@ public class ProcessingSketch extends PApplet {
 		
 		client = new Client();
 		player1 = new Player(this, (float) width / 2, (float) height / 20,
-				(float) width / 30, (float) height / 30, 0, playerIdx);
+				(float) width / 30, (float) height / 30, 0, (float) random(0,999));
+		System.out.println("Client created player with randNum: " + player1.randNum);
 		objects = new LinkedList<GameObject>();
-		objects.add(player1);
-		objects.addAll(client.init(player1));
-		
+		client.init(player1);
+		eventBuffer = new ArrayList<Event>();
+		eventBuffer.add(new InputEvent(InputType.JUMP));
 		//playerIdx = objects.size();
 	}
 
 	public void draw() {
-		objects = client.update(eventBuffer);
-
+		LinkedList<GameObject> objs = client.update(eventBuffer);
+		if (objs != null) {
+			objects = objs;
+		}
+		
 		//render
 		background(100);
 		for (GameObject obj : objects) {
@@ -251,6 +256,10 @@ public class ProcessingSketch extends PApplet {
 		case ' ':
 			//eventBuffer.add(new InputEvent(InputType.JUMP));
 			player1.jump();
+			break;
+		case 'q':
+			//eventBuffer.add(new InputEvent(InputType.JUMP));
+			exit();
 			break;
 		}
 	}

@@ -1,9 +1,12 @@
 package csc481.objects;
 
+import java.io.Serializable;
+
 import processing.core.PApplet;
 
-public class DeathZone extends GameObject {
-	
+public class DeathZone extends GameObject implements Serializable{
+	private static final long serialVersionUID = 3985473101770314619L;
+
 	public DeathZone(PApplet p) {
 		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0);
 	}

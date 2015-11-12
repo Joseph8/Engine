@@ -1,12 +1,10 @@
 package csc481.Time;
 
-import java.io.Serializable;
 import java.util.Queue;
 
 
 
-public class Timeline implements Serializable {
-	private static final long serialVersionUID = 4879080289871748537L;
+public class Timeline {
 	private static final int AVG_WINDOW = 20; //frames to average for delta time calculation
 	private static long startTime;
 	private static long loopIterations;

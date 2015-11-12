@@ -1,6 +1,9 @@
 package csc481.objects;
 
-public class RendererNormal extends Renderer {
+import java.io.Serializable;
+
+public class RendererNormal extends Renderer implements Serializable {
+	private static final long serialVersionUID = 6561729629105275027L;
 
 	public RendererNormal(GameObject obj) {
 		owner = obj;

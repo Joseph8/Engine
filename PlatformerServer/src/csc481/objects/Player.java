@@ -1,23 +1,27 @@
 package csc481.objects;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 import csc481.ProcessingSketch;
 import processing.core.PApplet;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Serializable {
+	private static final long serialVersionUID = 3311133245147443568L;
 	private static final float jumpSpeed = (float) -3.5;
 	private static final float maxMoveSpeed = (float) 4;
 	private boolean onGround;
 	private boolean secondJumpAvailable;
 	private boolean isJumping;
+	private int index;
+	public float randNum; // for testing
 
 	
 	public Player(PApplet p) {
-		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0);
+		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0);
 	}
 	
-	public Player(PApplet p, float xPos, float yPos, float width, float height, float corner_radius) {
+	public Player(PApplet p, float xPos, float yPos, float width, float height, float corner_radius, float randNum) {
 		super(p, xPos, yPos, width, height);
 		//setXSpeed((float) 1.5);
 		onGround = true;
@@ -26,6 +30,7 @@ public class Player extends GameObject {
 		mover = new MoverGravityJump((float) 3.5, (GameObject) this);
 		collider = new ColliderNormal((GameObject) this);
 		renderer = new RendererNormal((GameObject) this);
+		this.randNum = index; //for testing
 	}
 	
 	public void moveLeft() {
@@ -80,6 +85,10 @@ public class Player extends GameObject {
 				yPos = obj.getyPos();
 			}
 		}
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 }

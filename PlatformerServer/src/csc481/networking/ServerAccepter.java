@@ -8,7 +8,7 @@ import java.net.SocketException;
 
 public class ServerAccepter implements Runnable{
 	public static final int PORT_NUMBER = 26036;
-	public static final int timeout = 10;
+	public static final int timeout = 100;
 	private boolean isRunning;
 	ServerSocket serverSocket;
 	

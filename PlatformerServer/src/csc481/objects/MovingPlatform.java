@@ -1,10 +1,13 @@
 package csc481.objects;
 
+import java.io.Serializable;
+
 import processing.core.PApplet;
 import csc481.ProcessingSketch;
 
-public class MovingPlatform extends GameObject {
-	
+public class MovingPlatform extends GameObject implements Serializable {
+	private static final long serialVersionUID = 3800632648653825830L;
+
 	public MovingPlatform(PApplet p) {
 		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0, (float) 0, (float) 0);
 	}

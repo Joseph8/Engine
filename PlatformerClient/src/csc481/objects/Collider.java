@@ -3,7 +3,7 @@ package csc481.objects;
 import java.io.Serializable;
 
 public abstract class Collider implements Serializable {
-	private static final long serialVersionUID = 15654;
+	private static final long serialVersionUID = 6356499062630208485L;
 	protected GameObject owner;
 	//protected int priority;
 	protected float prevXBounds[] = new float[4];

@@ -1,12 +1,15 @@
 package csc481.objects;
 
+import java.io.Serializable;
+
 /**
  * Collides objects that have a medium collision priority (they don't 
  * move high collision priority but move low collision priority)
  * @author Joseph Gregory
  *
  */
-public class ColliderNormal extends Collider {
+public class ColliderNormal extends Collider implements Serializable {
+	private static final long serialVersionUID = 5354055632444588055L;
 
 	public ColliderNormal(GameObject obj) {
 		owner = obj;

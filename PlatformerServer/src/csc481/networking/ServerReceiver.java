@@ -3,7 +3,11 @@ package csc481.networking;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+
+import csc481.events.Event;
+
 /**
  * Receives objects from the clients and updates them in the server.
  * @author Joseph Gregory
@@ -30,22 +34,24 @@ public class ServerReceiver implements Runnable{
 		    		  	  ObjectInputStream input = Server.getInputStreams().get(i);
 		    		  	  //ObjectInputStream input = new ObjectInputStream(sock.getInputStream());
 		    		  	  //if (input == null) System.out.println("NULL\n\n\n\n\n\n\n\n\n\n");
-		    		  	  TestObject object;
+		    		  	  ArrayList<Event> eventBuffer;
 				    	  
 		    		  	  try {
-		    		  		  object = (TestObject) input.readObject();
+		    		  		  eventBuffer = (ArrayList<Event>) input.readObject();
+		    		  		  System.out.println("Server received event 1 timestamp:" + eventBuffer.get(0).timestamp);
 		    		  	  } catch (SocketTimeoutException e) {
+		    		  		  System.out.println("ServerReceiver timeout");
 		    		  		  continue;
 		    		  	  }
 		    		  	  
-				    	  //System.out.println("111111111111111111111111111111" + p);//!
-				    	  Server.updateObject(object);
-				    	  System.out.println(">:??>>> Passed in obj value: " + object.getStringData() + ", New obj value: " + Server.objects.get(object.getIndex()).getStringData());
+				    	  for (int j = 0; j < eventBuffer.size(); j++) {
+				    		  //EventHandler.raise(eventBuffer.get(j));
+					    	  System.out.println("SERVER received Event at timestamp " + i + ": " + eventBuffer.get(i).timestamp);
+				    	  }
 
 				    	  System.out.println("222222222222222222222222222222");//!
 				  		  //must tell all clients that this object has been updated
 				    	  //Server.sendObjectToClients(object, object.getIndex());
-				    	  System.out.println("333333333333333333333333333333");//!
 				    	  
 					      
 				    	  //For future assignments

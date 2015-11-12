@@ -1,11 +1,14 @@
 package csc481.objects;
 
+import java.io.Serializable;
+
 /**
  * Moves objects that respond to gravity, can jump, and move left and right.
  * @author Joseph Gregory
  *
  */
-public class MoverGravityJump extends Mover {
+public class MoverGravityJump extends Mover implements Serializable {
+	private static final long serialVersionUID = 6774092702344730030L;
 	private float maxFallingSpeed;
 	protected boolean movingRight;
 	protected boolean movingLeft;

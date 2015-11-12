@@ -4,7 +4,6 @@ import java.io.Serializable;
 import processing.core.PApplet;
 
 public class GameObject implements Serializable {
-
 	private static final long serialVersionUID = 12345;
 	protected float xPos;
 	protected float yPos;
@@ -13,7 +12,7 @@ public class GameObject implements Serializable {
 	protected float width;
 	protected float height;
 	protected float corner_radius;
-	protected PApplet parent;
+	protected transient PApplet parent;
 	
 	//components
 	protected Mover mover;

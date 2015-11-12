@@ -2,6 +2,9 @@ package csc481;
 
 import java.util.LinkedList;
 
+import csc481.networking.Server;
+import csc481.networking.ServerAccepter;
+import csc481.networking.ServerReceiver;
 import csc481.objects.DeathZone;
 import csc481.objects.GameObject;
 import csc481.objects.MoverGravityJump;
@@ -22,6 +25,13 @@ public class ProcessingSketch extends PApplet {
 	of rect positions before move().
 	{obj1Left, obj1Right, obj2Left, obj2Right}*/
 	float prevXBounds[] = new float[4];
+	boolean stop;
+	
+	ServerAccepter accepter;
+	Thread accepterThread;
+	
+	ServerReceiver receiver = new ServerReceiver();
+	Thread receiverThread = new Thread(receiver);
 
 	public void setup() {
 		colors[0] = color(238, 233, 233);
@@ -34,9 +44,9 @@ public class ProcessingSketch extends PApplet {
 		background(100);
 		objects = new LinkedList<GameObject>();
 		
-		player1 = new Player(this, (float) width / 2, (float) height / 20,
-				(float) width / 30, (float) height / 30, 0);
-		objects.add(player1);
+//		player1 = new Player(this, (float) width / 2, (float) height / 20,
+//				(float) width / 30, (float) height / 30, 0);
+//		objects.add(player1);
 		for (int i = 0; i < rectangles.length; i++) {
 			float xSpeed = random(-1, 1);
 			float ySpeed = sqrt(1 - xSpeed * xSpeed);
@@ -59,6 +69,17 @@ public class ProcessingSketch extends PApplet {
 		objects.add( new SpawnPoint(this, width/2 + 5, 13 * (height / 20)));
 		objects.add( new SpawnPoint(this, width/3 + 5, 6 * (height / 20)));
 		
+		Server.init();
+		
+		accepter = new ServerAccepter();
+		accepterThread = new Thread(accepter);
+		accepterThread.start();
+		
+		receiver = new ServerReceiver();
+		receiverThread = new Thread(receiver);
+		receiverThread.start();
+		stop = false;
+		
 	}
 
 	public void draw() {
@@ -80,7 +101,7 @@ public class ProcessingSketch extends PApplet {
 		// break;
 		// }
 		// }
-		background(100);
+//		background(100);
 //		prevXBounds[0] = player1.getxPos();
 //		prevXBounds[1] = player1.getxPos() + player1.getWidth();
 		
@@ -114,21 +135,19 @@ public class ProcessingSketch extends PApplet {
 			}
 		}
 		*/
-		
+		if(stop) exitProgram();
+		Server.updateClients(objects);
+		/**
 		//move and collide
 		player1.getCollider().setPrevOwnerXBounds();
 		player1.getMover().move();
 		player1.setOnGround(false);
-		int i = 0;
 		for (GameObject obj : objects) {
-			if (i == 0) {
-				i = 1;
-				continue;
-			}
 			player1.getCollider().setPrevObj2XBounds(obj);
 			if (obj.getMover() != null) obj.getMover().move();
 			player1.getCollider().collide(obj);
 		}
+		*/
 		/**
 		player1.getMover().move();
 		player1.setOnGround(false);
@@ -145,10 +164,10 @@ public class ProcessingSketch extends PApplet {
 		player1.getCollider().collide(ground);
 		*/
 		
-		//render
-		for (GameObject obj : objects) {
-			if (obj.getRenderer() != null) obj.getRenderer().render();
-		}
+//		//render
+//		for (GameObject obj : objects) {
+//			if (obj.getRenderer() != null) obj.getRenderer().render();
+//		}
 	}
 
 	/**
@@ -248,8 +267,12 @@ public class ProcessingSketch extends PApplet {
 		case ' ':
 			player1.jump();
 			break;
+		case 'q':
+			stop = true;
+			break;
 		}
 	}
+	
 
 	public void keyReleased() {
 		switch (key) {
@@ -277,4 +300,18 @@ public class ProcessingSketch extends PApplet {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void exitProgram() {
+		accepter.stop();
+		receiver.stop();
+		try {
+			accepterThread.join();
+			receiverThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		exit();
+	}
+	
 }

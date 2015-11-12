@@ -3,6 +3,7 @@ package csc481.networking;
 import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -32,20 +33,26 @@ public class Client {
 	 */
 	public LinkedList<GameObject> update(ArrayList<Event> eventBuffer) {
 		try {
-			
+			 
 			output.reset();
 			output.writeObject(eventBuffer);
 			output.flush();
-			System.out.println("client written to server");//!
+			
+			for (int i = 0; i < eventBuffer.size(); i++) {
+				System.out.println("CLIENT received Event at timestamp " + i + ": " + eventBuffer.get(i).timestamp);
+			}
+			
 			//update this client with new information from the server
 			//(probably want to make this a new thread in the future)
-			Player inObj;
 			LinkedList<GameObject> newObjects = null;
+			if (input == null) input = new ObjectInputStream( sock.getInputStream() );
 			while (true) {
 				try {
 					int i = 0;
     				newObjects = (LinkedList<GameObject>) input.readObject();
-    				
+    				for (GameObject object : newObjects) {
+    					System.out.println("CLIENT width for received object" + i + " :" + object.getWidth());
+    				}
 //    				i++;
 //    				inObj = (Player) input.readObject();
 //    				//System.out.println("read object");//!
@@ -55,6 +62,7 @@ public class Client {
 //    				System.out.println(">>>>A client RECEIVED a player with inded " + inObj.getIndex());//!
     				if (i > 1) System.out.println("a client read multiple objects------------------------------" + i);
 	    		} catch (SocketTimeoutException e) {
+	    			System.out.println("Client timeout");//!
 					return null;
 				} catch (EOFException e) {
 					return newObjects;
@@ -69,21 +77,36 @@ public class Client {
 		return null;
 	}
 	
-	public LinkedList<GameObject> init(Player player) {
+	public void init(Player player) {
 		try {
 			host  = InetAddress.getByName("127.0.0.1");
-			sock = new Socket(host, PORT_NUMBER);
+			boolean connected = false;
+			while (!connected) {
+				try {
+					connected = true;
+					sock = new Socket(host, PORT_NUMBER);
+					if (!connected)	{
+						System.out.println("Waiting");
+						wait(1000);
+					}
+				} catch (ConnectException e) {
+					System.out.println("Connection to the server failed. Trying again in 1 second.");
+					connected = false;
+				}
+			}
 			sock.setSoTimeout(timeout);
 			
-			ObjectOutputStream output = new ObjectOutputStream( sock.getOutputStream() );
+			output = new ObjectOutputStream( sock.getOutputStream() );
 			output.reset();
 			output.writeObject(player);
 			output.flush();
 			
-			ObjectInputStream input = new ObjectInputStream( sock.getInputStream() );	
+			
+			
+			/**ObjectInputStream input = new ObjectInputStream( sock.getInputStream() );	
 			//populate the objects list with objects from the server until the server sends a null object
 			LinkedList<GameObject> objects = (LinkedList<GameObject>) input.readObject();	
-	
+			 */
 			
 	//		System.out.println("IN THE CLIENT :");//!
 			//! for testing purposes
@@ -92,11 +115,11 @@ public class Client {
 	//		}
 			
 			System.out.println("Client initialized");//!
-			return objects;
+			//return objects;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return;// null;
 	}
 	
 }
