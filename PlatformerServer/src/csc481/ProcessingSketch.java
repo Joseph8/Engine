@@ -164,10 +164,10 @@ public class ProcessingSketch extends PApplet {
 		player1.getCollider().collide(ground);
 		*/
 		
-//		//render
-//		for (GameObject obj : objects) {
-//			if (obj.getRenderer() != null) obj.getRenderer().render();
-//		}
+		//render
+		for (GameObject obj : objects) {
+			if (obj.getRenderer() != null) obj.getRenderer().render();
+		}
 	}
 
 	/**

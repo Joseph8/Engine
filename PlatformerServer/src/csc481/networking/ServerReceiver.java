@@ -6,6 +6,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import csc481.Time.Timeline;
 import csc481.events.Event;
 
 /**
@@ -38,6 +39,9 @@ public class ServerReceiver implements Runnable{
 				    	  
 		    		  	  try {
 		    		  		  eventBuffer = (ArrayList<Event>) input.readObject();
+		    		  		  for (Event event : eventBuffer) {
+		    		  			  event.timestamp = Timeline.getIterations();
+		    		  		  }
 		    		  		  System.out.println("Server received event 1 timestamp:" + eventBuffer.get(0).timestamp);
 		    		  	  } catch (SocketTimeoutException e) {
 		    		  		  System.out.println("ServerReceiver timeout");

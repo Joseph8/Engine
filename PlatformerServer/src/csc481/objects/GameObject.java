@@ -1,10 +1,13 @@
 package csc481.objects;
 import java.io.Serializable;
 
+import csc481.events.Event;
 import processing.core.PApplet;
 
 public class GameObject implements Serializable {
 	private static final long serialVersionUID = 12345;
+	private static long nextGUID = 0;
+	private long GUID;
 	protected float xPos;
 	protected float yPos;
 	protected int color;
@@ -27,18 +30,10 @@ public class GameObject implements Serializable {
 		this.height = height;
 		color = 0;
 		alpha = 0;
+		GUID = nextGUID;
+		nextGUID++;
 	}
 	
-//	void display() {
-//		parent.fill((int) parent.random(1,294967295),100);
-//		parent.noStroke();
-//		//parent.rect(x/2, 0, w/2, parent.height);
-//	}
-	
-//	void move() {
-//		xPos += speed;
-//		//if (x > parent.width +20) x = -20;
-//	}
 	public float getWidth() {
 		return width;
 	}
@@ -97,5 +92,20 @@ public class GameObject implements Serializable {
 
 	public Renderer getRenderer() {
 		return renderer;
+	}
+
+	public PApplet getParent() {
+		return parent;
+	}
+
+	public void setParent(PApplet parent) {
+		this.parent = parent;
+	}
+	public long getGUID() {
+		return GUID;
+	}
+
+	public void onEvent(Event event) {
+		//should be overridden
 	}
 }

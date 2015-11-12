@@ -52,4 +52,8 @@ public class Timeline implements Serializable {
 		prevFrameTimes.add(getGameTime());
 		loopIterations++;
 	}
+	
+	public static long getIterations() {
+		return loopIterations;
+	}
 }

@@ -1,10 +1,12 @@
 package csc481.Time;
 
+import java.io.Serializable;
 import java.util.Queue;
 
 
 
-public class Timeline {
+public class Timeline implements Serializable {
+	private static final long serialVersionUID = 4879080289871748537L;
 	private static final int AVG_WINDOW = 20; //frames to average for delta time calculation
 	private static long startTime;
 	private static long loopIterations;
@@ -49,5 +51,9 @@ public class Timeline {
 		prevFrameTimes.remove();
 		prevFrameTimes.add(getGameTime());
 		loopIterations++;
+	}
+	
+	public static long getIterations() {
+		return loopIterations;
 	}
 }

@@ -80,7 +80,7 @@ public class ProcessingSketch extends PApplet {
 	}
 
 	public void draw() {
-		LinkedList<GameObject> objs = client.update(eventBuffer);
+		LinkedList<GameObject> objs = client.update(eventBuffer, this);
 		if (objs != null) {
 			objects = objs;
 		}

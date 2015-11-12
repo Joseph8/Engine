@@ -98,4 +98,12 @@ public class GameObject implements Serializable {
 	public Renderer getRenderer() {
 		return renderer;
 	}
+
+	public PApplet getParent() {
+		return parent;
+	}
+
+	public void setParent(PApplet parent) {
+		this.parent = parent;
+	}
 }

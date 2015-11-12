@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 import csc481.ProcessingSketch;
+import csc481.events.Event;
+import csc481.events.InputEvent;
 import processing.core.PApplet;
 
 public class Player extends GameObject implements Serializable {
@@ -89,6 +91,46 @@ public class Player extends GameObject implements Serializable {
 	
 	public int getIndex() {
 		return index;
+	}
+	
+	public void onEvent(Event e) {
+		switch (e.type) {
+		case COLLISION:
+			break;
+		case DEATH:
+			die();
+			break;
+		case INPUT:
+			switch (((InputEvent)e).input) {
+			case JUMP:
+				jump();
+				break;
+			case MOVE_LEFT:
+				moveLeft();
+				break;
+			case MOVE_RIGHT:
+				moveRight();
+				break;
+			case STOP_JUMP:
+				stopJump();
+				break;
+			case STOP_MOVE_LEFT:
+				stopMoveLeft();
+				break;
+			case STOP_MOVE_RIGHT:
+				stopMoveRight();
+				break;
+			default:
+				break;
+			}
+			break;
+		case NEW_OBJECT:
+			break;
+		case SPAWN:
+			break;
+		default:
+			break;
+		}
 	}
 	
 }

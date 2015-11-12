@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
+import processing.core.PApplet;
 import csc481.ProcessingSketch;
 import csc481.events.Event;
 import csc481.objects.GameObject;
@@ -31,7 +32,7 @@ public class Client {
 	 * @param eventBuffer events to send
 	 * @return the updated GameObjects
 	 */
-	public LinkedList<GameObject> update(ArrayList<Event> eventBuffer) {
+	public LinkedList<GameObject> update(ArrayList<Event> eventBuffer, PApplet parent) {
 		try {
 			 
 			output.reset();
@@ -46,14 +47,15 @@ public class Client {
 			//(probably want to make this a new thread in the future)
 			LinkedList<GameObject> newObjects = null;
 			if (input == null) input = new ObjectInputStream( sock.getInputStream() );
+			int i = 0;
 			while (true) {
 				try {
-					int i = 0;
     				newObjects = (LinkedList<GameObject>) input.readObject();
     				for (GameObject object : newObjects) {
+    					object.setParent(parent);
     					System.out.println("CLIENT width for received object" + i + " :" + object.getWidth());
     				}
-//    				i++;
+    				i++;
 //    				inObj = (Player) input.readObject();
 //    				//System.out.println("read object");//!
 //    				//need to somehow put this in a loop so it keeps reading object until
@@ -61,6 +63,7 @@ public class Client {
 //    				ProcessingSketch.getObjects().set( inObj.getIndex(), inObj);
 //    				System.out.println(">>>>A client RECEIVED a player with inded " + inObj.getIndex());//!
     				if (i > 1) System.out.println("a client read multiple objects------------------------------" + i);
+    				return newObjects;
 	    		} catch (SocketTimeoutException e) {
 	    			System.out.println("Client timeout");//!
 					return null;
