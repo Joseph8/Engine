@@ -1,28 +1,30 @@
 package csc481.Time;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.Queue;
 
 
 
 public class Timeline implements Serializable {
 	private static final long serialVersionUID = 4879080289871748537L;
-	private static final int AVG_WINDOW = 20; //frames to average for delta time calculation
-	private static long startTime;
-	private static long loopIterations;
-	private static double timeMultiplier;
-	private static Queue<Long> prevFrameTimes;
+	private final int AVG_WINDOW = 20; //frames to average for delta time calculation
+	private long startTime;
+	private long loopIterations;
+	private float timeMultiplier;
+	private Queue<Long> prevFrameTimes;
 	
-	public static void init() {
+	public Timeline() {
 		startTime = System.currentTimeMillis();
 		loopIterations = 0;
-		timeMultiplier = 1.0;
+		timeMultiplier = (float) 1.0;
+		prevFrameTimes = new LinkedList<Long>();
 		for (int i = 0; i < AVG_WINDOW; i++) {
 			prevFrameTimes.add((long) 0);
 		}
 	}
 	
-	public static long getGameTime() {
+	public long getGameTime() {
 		return System.currentTimeMillis() - startTime;
 	}
 	
@@ -30,7 +32,7 @@ public class Timeline implements Serializable {
 	 * 
 	 * @return estimated time change this frame
 	 */
-	public static double getDeltaT() {
+	public double getDeltaT() {
 		Long p[] = (Long[]) prevFrameTimes.toArray();
 		int total = 0;
 		
@@ -43,17 +45,21 @@ public class Timeline implements Serializable {
 		
 	}
 	
-	public static void setTimeMultiplier(double mult) {
-		timeMultiplier = mult;		
+	public void setTimeMultiplier(float mult) {
+		timeMultiplier = mult;
 	}
 	
-	public static void incrementIterations() {
+	public double getTimeMultiplier() {
+		return timeMultiplier;
+	}
+	
+	public void incrementIterations() {
 		prevFrameTimes.remove();
 		prevFrameTimes.add(getGameTime());
 		loopIterations++;
 	}
 	
-	public static long getIterations() {
+	public long getIterations() {
 		return loopIterations;
 	}
 }

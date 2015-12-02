@@ -2,6 +2,10 @@ package csc481.objects;
 
 import java.io.Serializable;
 
+import processing.core.PApplet;
+import csc481.ProcessingSketch;
+import csc481.Time.Timeline;
+
 /**
  * Moves objects that respond to gravity, can jump, and move left and right.
  * @author Joseph Gregory
@@ -26,9 +30,10 @@ public class MoverGravityJump extends Mover implements Serializable {
 	
 	public void move() {
 		
+		
 		//move
-		owner.xPos += xSpeed;
-		owner.yPos += ySpeed;
+		owner.xPos += (xSpeed*ProcessingSketch.getGameTimeline().getTimeMultiplier());
+		owner.yPos += (ySpeed*ProcessingSketch.getGameTimeline().getTimeMultiplier());
 		
 		//y acceleration
 		if (ySpeed < maxFallingSpeed) {
@@ -53,17 +58,17 @@ public class MoverGravityJump extends Mover implements Serializable {
 				xSpeed = 0;
 			}
 		}
-		
+
 		//move to opposite boundary
-		if (owner.xPos > owner.parent.width) {
+		if (owner.xPos > ProcessingSketch.getInstance().width) {
 			owner.xPos = 0;
 		} else if (owner.xPos < 0) {
-			owner.xPos = owner.parent.width;
+			owner.xPos = ProcessingSketch.getInstance().width;
 		}
-		if (owner.yPos > owner.parent.height) {
+		if (owner.yPos > ProcessingSketch.getInstance().height) {
 			owner.yPos = 0;
 		} else if (owner.yPos < 0) {
-			owner.yPos = owner.parent.height;
+			owner.yPos = ProcessingSketch.getInstance().height;
 		}
 	}
 	

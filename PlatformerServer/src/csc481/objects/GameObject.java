@@ -15,7 +15,8 @@ public class GameObject implements Serializable {
 	protected float width;
 	protected float height;
 	protected float corner_radius;
-	protected transient PApplet parent;
+	protected float prevXBoundLeft;
+	protected float prevXBoundRight;
 	
 	//components
 	protected Mover mover;
@@ -23,7 +24,6 @@ public class GameObject implements Serializable {
 	protected Renderer renderer;
 	
 	public GameObject (PApplet p, float xPos, float yPos, float width, float height) {
-		parent = p;
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.width = width;
@@ -93,19 +93,25 @@ public class GameObject implements Serializable {
 	public Renderer getRenderer() {
 		return renderer;
 	}
-
-	public PApplet getParent() {
-		return parent;
-	}
-
-	public void setParent(PApplet parent) {
-		this.parent = parent;
-	}
+	
 	public long getGUID() {
 		return GUID;
 	}
 
 	public void onEvent(Event event) {
 		//should be overridden
+	}
+
+	public float getPrevXBoundLeft() {
+		return prevXBoundLeft;
+	}
+
+	public float getPrevXBoundRight() {
+		return prevXBoundRight;
+	}
+
+	public void setPrevXBounds() {
+		prevXBoundLeft = xPos;
+		prevXBoundRight = xPos + width;
 	}
 }

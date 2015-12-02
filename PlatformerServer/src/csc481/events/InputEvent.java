@@ -7,9 +7,10 @@ public class InputEvent extends Event {
 	public InputType input;
 	public final int priority = 2;
 
-	public InputEvent(InputType input) {
+	public InputEvent(InputType input, long timestamp) {
 		this.input = input;
 		//this.timestamp = Timeline.getIterations();
-		this.type = EventType.INPUT;
+		type = EventType.INPUT;
+		this.timestamp = timestamp;
 	}
 }

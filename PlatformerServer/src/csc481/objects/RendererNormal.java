@@ -2,6 +2,8 @@ package csc481.objects;
 
 import java.io.Serializable;
 
+import csc481.ProcessingSketch;
+
 public class RendererNormal extends Renderer implements Serializable {
 	private static final long serialVersionUID = 6561729629105275027L;
 
@@ -10,8 +12,8 @@ public class RendererNormal extends Renderer implements Serializable {
 	}
 	
 	public void render() {
-		owner.parent.fill(owner.color);
-		owner.parent.rect(owner.xPos, owner.yPos, owner.width, owner.height, owner.corner_radius);	
+		ProcessingSketch.getInstance().fill(owner.color);
+		ProcessingSketch.getInstance().rect(owner.xPos, owner.yPos, owner.width, owner.height, owner.corner_radius);	
 	}
 
 }

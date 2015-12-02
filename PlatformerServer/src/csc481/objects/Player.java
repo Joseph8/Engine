@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 import csc481.ProcessingSketch;
+import csc481.events.CollisionEvent;
 import csc481.events.Event;
 import csc481.events.InputEvent;
+import csc481.scripts.ScriptManager;
 import processing.core.PApplet;
 
 public class Player extends GameObject implements Serializable {
@@ -17,7 +19,7 @@ public class Player extends GameObject implements Serializable {
 	private boolean isJumping;
 	private int index;
 	public float randNum; // for testing
-
+	public static final String inputScript = "player_input.js";
 	
 	public Player(PApplet p) {
 		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0);
@@ -96,11 +98,60 @@ public class Player extends GameObject implements Serializable {
 	public void onEvent(Event e) {
 		switch (e.type) {
 		case COLLISION:
+			CollisionEvent c = (CollisionEvent)e;
+			if (c.obj2 instanceof Player) {
+				//switch the objects so that obj1 is the player
+				Player temp = (Player) c.obj2;
+				c.obj2 = c.obj1;
+				c.obj1 = temp;				
+			} 
+			setOnGround(true);
+			switch (c.edge) {
+			case BOTTOM:
+				setyPos(c.obj2.getyPos() + c.obj2.getHeight());
+				if (c.obj2.getMover() == null) {
+					((MoverGravityJump)getMover()).setYSpeed(0);
+				} else {
+					((MoverGravityJump)getMover()).setYSpeed(c.obj2.getMover().getYSpeed());
+				}
+				break;
+			case LEFT:
+				setxPos(c.obj2.getxPos() - getWidth());
+				if (c.obj2.getMover() == null) {
+					((MoverGravityJump)getMover()).setXSpeed(0);
+				} else {
+					((MoverGravityJump)getMover()).setXSpeed(c.obj2.getMover().getXSpeed());
+				}
+				break;
+			case RIGHT:
+				setxPos(c.obj2.getxPos() + c.obj2.getWidth());
+				if (c.obj2.getMover() == null) {
+					((MoverGravityJump)getMover()).setXSpeed(0);
+				} else {
+					((MoverGravityJump)getMover()).setXSpeed(c.obj2.getMover().getXSpeed());
+				}
+				break;
+			case TOP:
+				setyPos(c.obj2.getyPos() - getHeight());
+				if (c.obj2.getMover() != null) {
+					//make the player move with obj2
+					((MoverGravityJump) getMover()).addMovement(c.obj2.getMover().getXSpeed(), c.obj2.getMover().getYSpeed());
+				}
+				break;
+			default:
+				break;
+			
+			}
 			break;
 		case DEATH:
 			die();
 			break;
 		case INPUT:
+			ScriptManager.loadScript(inputScript);
+			ScriptManager.bindArgument("player", this);
+			ScriptManager.bindArgument("input", ((InputEvent)e).input);
+			ScriptManager.executeScript();
+			/*
 			switch (((InputEvent)e).input) {
 			case JUMP:
 				jump();
@@ -122,7 +173,7 @@ public class Player extends GameObject implements Serializable {
 				break;
 			default:
 				break;
-			}
+			}*/
 			break;
 		case NEW_OBJECT:
 			break;
