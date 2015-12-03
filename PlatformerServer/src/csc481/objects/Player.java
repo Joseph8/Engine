@@ -1,25 +1,28 @@
 package csc481.objects;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedList;
 
 import csc481.ProcessingSketch;
 import csc481.events.CollisionEvent;
 import csc481.events.Event;
+import csc481.events.EventType;
 import csc481.events.InputEvent;
 import csc481.scripts.ScriptManager;
 import processing.core.PApplet;
 
 public class Player extends GameObject implements Serializable {
 	private static final long serialVersionUID = 3311133245147443568L;
-	private static final float jumpSpeed = (float) -3.5;
+	public static final float jumpSpeed = (float) -3.5;
 	private static final float maxMoveSpeed = (float) 4;
-	private boolean onGround;
-	private boolean secondJumpAvailable;
-	private boolean isJumping;
+	public boolean onGround;
+	public boolean secondJumpAvailable;
+	public boolean isJumping;
 	private int index;
 	public float randNum; // for testing
-	public static final String inputScript = "player_input.js";
+	public static final String inputScript = "./../scripts/player_input.js";
+	public static final String jumpScript = "./../scripts/player_jump.js";
 	
 	public Player(PApplet p) {
 		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0);
@@ -48,6 +51,11 @@ public class Player extends GameObject implements Serializable {
 	}
 
 	public void jump() {
+		ScriptManager.loadScript(jumpScript);
+		ScriptManager.bindArgument("player", this);
+		ScriptManager.bindArgument("playerMover", mover);
+		ScriptManager.executeScript();
+		/*
 		if (onGround) {
 			((MoverGravityJump)mover).ySpeed = jumpSpeed;
 			secondJumpAvailable = true;
@@ -56,6 +64,7 @@ public class Player extends GameObject implements Serializable {
 			((MoverGravityJump)mover).ySpeed = jumpSpeed;
 			secondJumpAvailable = false;
 		}
+		*/
 	}
 
 	public void stopMoveLeft() {
@@ -96,6 +105,20 @@ public class Player extends GameObject implements Serializable {
 	}
 	
 	public void onEvent(Event e) {
+		ScriptManager.loadScript(inputScript);
+		ScriptManager.bindArgument("player", this);
+		if (e.type == EventType.COLLISION) {
+			CollisionEvent c = (CollisionEvent)e;
+			ScriptManager.bindArgument("c", c);
+			ScriptManager.bindArgument("isPlayer", c.obj2 instanceof Player);
+			ScriptManager.bindArgument("edge", c.edge);
+		} else if (e.type == EventType.INPUT) {
+			ScriptManager.bindArgument("input", ((InputEvent)e).input);
+		}
+		ScriptManager.bindArgument("type", e.type);
+		ScriptManager.bindArgument("playerMover", mover);
+		ScriptManager.executeScript();
+		/*
 		switch (e.type) {
 		case COLLISION:
 			CollisionEvent c = (CollisionEvent)e;
@@ -151,7 +174,7 @@ public class Player extends GameObject implements Serializable {
 			ScriptManager.bindArgument("player", this);
 			ScriptManager.bindArgument("input", ((InputEvent)e).input);
 			ScriptManager.executeScript();
-			/*
+			
 			switch (((InputEvent)e).input) {
 			case JUMP:
 				jump();
@@ -173,7 +196,7 @@ public class Player extends GameObject implements Serializable {
 				break;
 			default:
 				break;
-			}*/
+			}
 			break;
 		case NEW_OBJECT:
 			break;
@@ -182,6 +205,7 @@ public class Player extends GameObject implements Serializable {
 		default:
 			break;
 		}
+		*/
 	}
 	
 }
