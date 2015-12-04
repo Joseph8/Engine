@@ -5,35 +5,39 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 import csc481.ProcessingSketch;
+import csc481.eventhandlers.EventManager;
 import csc481.events.CollisionEvent;
 import csc481.events.Event;
 import csc481.events.EventType;
 import csc481.events.InputEvent;
+import csc481.events.NewObjectEvent;
 import csc481.scripts.ScriptManager;
 import processing.core.PApplet;
 
 public class Player extends GameObject implements Serializable {
 	private static final long serialVersionUID = 3311133245147443568L;
-	public static final float jumpSpeed = (float) -3.5;
+	private static final int max_shots = 2;
+	public static final float shotSpeed = (float) -20;
+	public static final float shotWidth = (float) 5;
+	public static final float shotHeight = (float) 10;
 	private static final float maxMoveSpeed = (float) 4;
 	public boolean onGround;
-	public boolean secondJumpAvailable;
-	public boolean isJumping;
+	public boolean secondShotAvailable;
+	public boolean isShooting;
 	private int index;
 	public float randNum; // for testing
 	public static final String inputScript = "./../scripts/player_input.js";
-	public static final String jumpScript = "./../scripts/player_jump.js";
+	public static final String shootScript = "./../scripts/player_shoot.js";
 	
-	public Player(PApplet p) {
-		this(p,(float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0);
+	public Player() {
+		this((float) 0,(float) 0,(float) 0,(float) 0,(float) 0, 0);
 	}
 	
-	public Player(PApplet p, float xPos, float yPos, float width, float height, float corner_radius, float randNum) {
-		super(p, xPos, yPos, width, height);
-		//setXSpeed((float) 1.5);
+	public Player(float xPos, float yPos, float width, float height, float corner_radius, float randNum) {
+		super(xPos, yPos, width, height);
 		onGround = true;
-		secondJumpAvailable = false;
-		isJumping = false;
+		secondShotAvailable = false;
+		isShooting = false;
 		mover = new MoverGravityJump((float) 3.5, (GameObject) this);
 		collider = new ColliderNormal((GameObject) this);
 		renderer = new RendererNormal((GameObject) this);
@@ -50,11 +54,17 @@ public class Player extends GameObject implements Serializable {
 		((MoverGravityJump)mover).movingRight = true;
 	}
 
-	public void jump() {
-		ScriptManager.loadScript(jumpScript);
+	public void shoot() {
+		if (Shot.num_shots <= max_shots) {
+			isShooting = true;
+			ProcessingSketch.getEventManager().raise(new NewObjectEvent(new Shot(xPos+(width/2), yPos-height, shotWidth, shotHeight, shotSpeed), ProcessingSketch.getGameTimeline().getIterations()));
+			
+		}
+		/*
+		ScriptManager.loadScript(shootScript);
 		ScriptManager.bindArgument("player", this);
 		ScriptManager.bindArgument("playerMover", mover);
-		ScriptManager.executeScript();
+		ScriptManager.executeScript();*/
 		/*
 		if (onGround) {
 			((MoverGravityJump)mover).ySpeed = jumpSpeed;
@@ -75,8 +85,8 @@ public class Player extends GameObject implements Serializable {
 		((MoverGravityJump)mover).movingRight = false;
 	}
 	
-	public void stopJump() {
-		isJumping = false;
+	public void stopShoot() {
+		isShooting = false;
 	}
 
 	public boolean isOnGround() {
@@ -85,7 +95,7 @@ public class Player extends GameObject implements Serializable {
 
 	public void setOnGround(boolean onGround) {
 		if (this.onGround == true && onGround == false) {
-			secondJumpAvailable = true;
+			secondShotAvailable = true;
 		}
 		this.onGround = onGround;
 	}

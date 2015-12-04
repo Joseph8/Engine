@@ -3,8 +3,8 @@ package csc481.events;
 public enum InputType {
 	MOVE_LEFT,
 	MOVE_RIGHT,
-	JUMP,
+	SHOOT,
 	STOP_MOVE_LEFT,
 	STOP_MOVE_RIGHT,
-	STOP_JUMP,
+	STOP_SHOOT,
 }

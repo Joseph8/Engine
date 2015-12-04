@@ -12,6 +12,8 @@ import csc481.Time.Timeline;
 import csc481.events.CollisionEvent;
 import csc481.events.Event;
 import csc481.events.EventType;
+import csc481.events.NewObjectEvent;
+import csc481.events.ShotCollisionEvent;
 import csc481.objects.GameObject;
 
 public class EventManager implements Serializable{
@@ -66,18 +68,26 @@ public class EventManager implements Serializable{
 		for (int i = 0; i < eventQueue.size(); i++) {
 			Event e = eventQueue.getLast();
 			if (e.timestamp > ProcessingSketch.getGameTimeline().getIterations()) break;
-			for (GameObject obj : ProcessingSketch.getObjects()) {
-				if (handlerMap.get(obj.getGUID()) == null) continue;
-				if (handlerMap.get(obj.getGUID()).contains(e.type)) {
-					if (e.type == EventType.COLLISION) {
-						if (((CollisionEvent)e).obj1.getGUID() != obj.getGUID() && ((CollisionEvent)e).obj2.getGUID() != obj.getGUID()) { 
-							continue; //if obj is neither of the collided objects, don't send the collision event to obj
+			if (e.type == EventType.NEW_OBJECT) {
+				ProcessingSketch.addGameObject(((NewObjectEvent) e).newObj);
+			} else if (e.type == EventType.SHOT_COLLISION) {
+				ProcessingSketch.removeObjByGUID(((ShotCollisionEvent) e).obj1GUID);
+				ProcessingSketch.removeObjByGUID(((ShotCollisionEvent) e).obj2GUID);
+			} else {
+				for (GameObject obj : ProcessingSketch.getObjects()) {
+					if (handlerMap.get(obj.getGUID()) == null) continue;
+					if (handlerMap.get(obj.getGUID()).contains(e.type)) {
+						if (e.type == EventType.COLLISION) {
+							if (((CollisionEvent)e).obj1.getGUID() != obj.getGUID() && ((CollisionEvent)e).obj2.getGUID() != obj.getGUID()) { 
+								continue; //if obj is neither of the collided objects, don't send the collision event to obj
+							}
 						}
+						obj.onEvent(e);
+						
 					}
-					obj.onEvent(e);
-					eventQueue.removeLast();
 				}
 			}
+			eventQueue.removeLast();
 			System.out.println("Events handled: " + i);
 		}
 	}

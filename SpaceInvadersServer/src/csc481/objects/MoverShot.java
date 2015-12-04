@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 import csc481.ProcessingSketch;
 
-public class MoverNoGravity extends Mover implements Serializable{
-	private static final long serialVersionUID = -6656135759979328453L;
+public class MoverShot extends Mover implements Serializable{
+	private static final long serialVersionUID = -6666372948024170377L;
 
-	public MoverNoGravity(float xSpeed, float ySpeed, GameObject obj) {
+	public MoverShot(float xSpeed, float ySpeed, GameObject obj) {
 		this.xSpeed = xSpeed;
 		this.ySpeed = ySpeed;
 		owner = obj;
@@ -25,12 +25,9 @@ public class MoverNoGravity extends Mover implements Serializable{
 			owner.xPos = ProcessingSketch.getInstance().width;
 		}
 		
-		if (owner.yPos > ProcessingSketch.getInstance().height) {
-			owner.yPos = 0;
-		} else if (owner.yPos < 0) {
-			owner.yPos = ProcessingSketch.getInstance().height;
+		if (owner.yPos > ProcessingSketch.getInstance().height || owner.yPos < 0) {
+			return false;
 		}
 		return true;
 	}
 }
-

@@ -5,7 +5,7 @@ import csc481.objects.GameObject;
 
 public class NewObjectEvent extends Event{
 	private static final long serialVersionUID = 7056346607601879804L;
-	GameObject newObj;
+	public GameObject newObj;
 	public final int priority = 5;
 	public NewObjectEvent(GameObject newObj, long timestamp) {
 		this.newObj = newObj;

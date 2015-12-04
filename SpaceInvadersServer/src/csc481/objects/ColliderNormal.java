@@ -1,5 +1,6 @@
 package csc481.objects;
 
+import java.awt.Rectangle;
 import java.io.Serializable;
 
 import csc481.ProcessingSketch;
@@ -7,6 +8,7 @@ import csc481.eventhandlers.EventManager;
 import csc481.events.CollisionEdge;
 import csc481.events.CollisionEvent;
 import csc481.events.DeathEvent;
+import csc481.events.ShotCollisionEvent;
 
 /**
  * Collides objects that have a medium collision priority (they don't 
@@ -24,8 +26,8 @@ public class ColliderNormal extends Collider implements Serializable {
 	@Override
 	public void collide(GameObject obj2) {
 		if (obj2 instanceof SpawnPoint) return;
-		if (obj2 instanceof DeathZone) {
-			collideDeathZone(obj2);
+		if (owner instanceof Shot) {
+			collideShot(obj2);
 			return;
 		}
 		float obj1Left = owner.xPos;
@@ -133,7 +135,13 @@ public class ColliderNormal extends Collider implements Serializable {
 		
 	}
 
-	private void collideDeathZone(GameObject obj2) {
+	private void collideShot(GameObject obj2) {
+		/**
+		Rectangle r1 = new Rectangle((int)owner.xPos,(int) owner.yPos,(int) owner.width,(int) owner.height);
+		Rectangle r2 = new Rectangle((int)obj2.xPos,(int) obj2.yPos,(int) obj2.width,(int) obj2.height);
+		if (r1.intersects(r2)) 	{
+			ProcessingSketch.getEventManager().raise(new ShotCollisionEvent(owner.getGUID(), obj2.getGUID(), ProcessingSketch.getGameTimeline().getIterations()));
+		}*/
 		float obj1Left = owner.xPos;
 		float obj1Right = owner.xPos + owner.width;
 		float obj2Left = obj2.getxPos();
@@ -147,7 +155,8 @@ public class ColliderNormal extends Collider implements Serializable {
 				(obj1Top < obj2Bottom && obj1Top > obj2Top)) {
 			if ((obj1Right > obj2Left && obj1Right < obj2Right)
 					|| (obj1Left < obj2Right && obj1Left > obj2Left)) {
-				ProcessingSketch.getEventManager().raise(new DeathEvent(ProcessingSketch.getGameTimeline().getIterations()));
+				ProcessingSketch.getEventManager().raise(new ShotCollisionEvent(owner.getGUID(), obj2.getGUID(), ProcessingSketch.getGameTimeline().getIterations()));
+				((Shot)owner).remove();
 			}
 		}
 	}

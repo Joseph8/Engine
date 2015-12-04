@@ -7,8 +7,8 @@ public abstract class Mover implements Serializable {
 	protected GameObject owner;
 	protected float xSpeed;
 	protected float ySpeed;
-	
-	public abstract void move();
+	/** Return false to signify the item should be removed*/
+	public abstract boolean move();
 	
 	public float getXSpeed() {
 		return xSpeed;

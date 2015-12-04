@@ -28,20 +28,13 @@ public class MoverGravityJump extends Mover implements Serializable {
 		owner = obj;
 	}
 	
-	public void move() {
+	public boolean move() {
 		
 		
 		//move
 		owner.xPos += (xSpeed*ProcessingSketch.getGameTimeline().getTimeMultiplier());
 		owner.yPos += (ySpeed*ProcessingSketch.getGameTimeline().getTimeMultiplier());
 		
-		//y acceleration
-		if (ySpeed < maxFallingSpeed) {
-			ySpeed += .1;
-			if (ySpeed > maxFallingSpeed) {
-				ySpeed = maxFallingSpeed;
-			}
-		}
 		//x acceleration
 		if (movingRight && xSpeed < targetXSpeed) {
 			xSpeed += .1;
@@ -70,6 +63,7 @@ public class MoverGravityJump extends Mover implements Serializable {
 		} else if (owner.yPos < 0) {
 			owner.yPos = ProcessingSketch.getInstance().height;
 		}
+		return true;
 	}
 	
 	//moves the object if it is on another moving object

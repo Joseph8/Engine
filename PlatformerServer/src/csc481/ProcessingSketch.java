@@ -153,14 +153,12 @@ public class ProcessingSketch extends PApplet {
 		
 		//collide
 		if (!Replay.replaying) {
-		int i = 0;
 		for (GameObject obj1 : objects) {
 			if (obj1.getCollider() == null) continue;
 			for (int j = 0; j < objects.size(); j++) {
 				if (obj1.getGUID() == objects.get(j).getGUID()) continue;
 				obj1.getCollider().collide(objects.get(j));
 			}
-			i++;
 		}
 		}
 		
@@ -250,7 +248,7 @@ public class ProcessingSketch extends PApplet {
 			break;
 		case 'd':
 			//player1.stopMoveRight();
-			if (!Replay.replaying) eventManager.raise(new InputEvent(InputType.STOP_MOVE_LEFT, getGameTimeline().getIterations()));
+			if (!Replay.replaying) eventManager.raise(new InputEvent(InputType.STOP_MOVE_RIGHT, getGameTimeline().getIterations()));
 			break;
 		case ' ':
 			//player1.stopJump();

@@ -36,14 +36,14 @@ function update() {
 	} else if (type == 'DEATH ') {
 		player.die();
 	} else if (type == 'INPUT') {
-		if (input == 'JUMP') {
-				player.jump();
+		if (input == 'SHOOT') {
+				player.shoot();
 		} else if (input == 'MOVE_LEFT') {
 				player.moveLeft();
 		} else if (input == 'MOVE_RIGHT') {
 				player.moveRight();
-		} else if (input == 'STOP_JUMP') {
-				player.stopJump();
+		} else if (input == 'STOP_SHOOT') {
+				player.stopShoot();
 		} else if (input == 'STOP_MOVE_LEFT') {
 				player.stopMoveLeft();
 		} else if (input == 'STOP_MOVE_RIGHT') {
@@ -55,4 +55,5 @@ function update() {
 	} else if (type == 'SPAWN') {
 
 	}
+	print('HERE------');
 }

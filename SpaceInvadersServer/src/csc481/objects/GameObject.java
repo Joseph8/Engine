@@ -23,7 +23,7 @@ public class GameObject implements Serializable {
 	protected Collider collider;
 	protected Renderer renderer;
 	
-	public GameObject (PApplet p, float xPos, float yPos, float width, float height) {
+	public GameObject (float xPos, float yPos, float width, float height) {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.width = width;
